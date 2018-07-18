@@ -29,6 +29,9 @@ spec:
           imagePullPolicy: {{ .Values.api.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.api.service.internalPort }}
+          envFrom:
+          - configMapRef:
+            name: {{ template "gravitee.api.fullname" . }}
           livenessProbe:
             httpGet:
               path: /management/apis
@@ -47,18 +50,5 @@ spec:
       nodeSelector:
 {{ toYaml .Values.api.nodeSelector | indent 8 }}
     {{- end }}
-          volumeMounts:
-            - name: config
-              mountPath: /opt/graviteeio-management-api/config/gravitee.yml
-              subPath: gravitee.yml
-          {{- if .Values.api.debugEnabled }}
-            - name: config
-              mountPath: /opt/graviteeio-management-api/config/logback.xml
-              subPath: logback.xml
-          {{- end }}
       imagePullSecrets:
         - name: {{ .Values.gateway.image.pullSecrets }}
-      volumes:
-        - name: config
-          configMap:
-            name: {{ template "gravitee.api.fullname" . }}

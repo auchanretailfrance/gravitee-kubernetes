@@ -25,12 +25,25 @@ oauth:
 inMemoryAuth:
   enabled: true
 
-mongo:
-  rs: rs
-  rsEnabled: true
-  dbhost: mongo-rs-mongodb-replicaset
-  dbname: gravitee
-  dbport: 27017
+mongodb:
+  ## standalone, replicaset or cluster
+  type: standalone
+  hosts:
+     ## if standalone, only the first occurence will be used
+    - host: mongo1
+      port: 27017
+    # - host: mongo2
+    #   port: 27017
+    # - host: mongo3
+    #   port: 27017
+  ## if type: replicaset
+  # replicaSet : rs
+  # dbname: gravitee
+  # username: gravitee
+  # password: gravitee
+  options: []
+    # connectTimeout: 500
+    # socketTimeout: 250
 
 es:
   protocol: http
@@ -42,6 +55,12 @@ es:
 api:
   name: api
   debugEnabled: false
+  config: {}
+    # See https://docs.gravitee.io/apim_installguide_management_api_configuration.html#environment_variables
+    # /!\ Mongodb and Elasticsearch are already configured
+    # ex : 
+    # analytics.security.username: admin
+    # analytics.security.password: admin
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -49,7 +68,7 @@ api:
   replicaCount: 1
   image:
     repository: graviteeio/management-api
-    tag: 1.15.0
+    tag: 1.18.0
     pullPolicy: Always
   service:
     type: ClusterIP
