@@ -68,9 +68,9 @@ Create mongodb URI
   {{- end -}}
   {{- range $key, $value := .Values.mongodb.hosts -}}
     {{- if eq $key 0 -}}
-      {{- printf "%s:%v" $value.host $value.port -}}
+      {{- printf "%s" $value -}}
     {{- else -}}
-      {{- printf ",%s:%v" $value.host $value.port -}}
+      {{- printf ",%s" $value -}}
     {{- end -}}
   {{- end -}}
   {{- printf "/" -}}

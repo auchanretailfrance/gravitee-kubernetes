@@ -12,7 +12,7 @@ data:
   gravitee_management_type: mongodb
   gravitee_management_mongodb_uri: {{ template "mongodb_uri" . }}
   {{- range $key, $value := .Values.elasticsearch.endpoints }}
-  gravitee_reporters_elasticsearch_endpoints_{{ $key }}: http://{{ $value.host }}:{{ $value.port }}
+  gravitee_reporters_elasticsearch_endpoints_{{ $key }}: http://{{ $value }}
   {{- end }}
   {{- if .Values.elasticsearch.index }}
   gravitee_reporters_elasticsearch_index: {{ .Values.elasticsearch.index }}
