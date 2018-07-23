@@ -15,8 +15,12 @@ data:
   {{- range $key, $value := .Values.elasticsearch.endpoints }}
   gravitee_analytics_elasticsearch_endpoints_{{ $key }}: http://{{ $value.host }}:{{ $value.port }}
   {{- end }}
+  {{- if .Values.elasticsearch.index }}
   gravitee_analytics_elasticsearch_index: {{ .Values.elasticsearch.index }}
+  {{- end }}
+  {{- if .Values.elasticsearch.cluster }}
   gravitee_analytics_elasticsearch_cluster: {{ .Values.elasticsearch.cluster }}
+  {{- end }}
   {{- if .Values.elasticsearch.username }}
   gravitee_analytics_security_username: {{ .Values.elasticsearch.username }}
   {{- if .Values.elasticsearch.password }}
