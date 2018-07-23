@@ -53,3 +53,38 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s-%s" .Release.Name $name .Values.ui.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create mongodb URI
+*/}}
+{{- define "mongodb_uri" -}}
+  {{- printf "mongodb://" -}}
+  {{- if .Values.mongodb.username -}}
+    {{- printf "%s" .Values.mongodb.username -}}
+    {{- if .Values.mongodb.password -}}
+      {{- printf ":%s" .Values.mongodb.password -}}
+    {{- end -}}
+    {{- printf "@" -}}
+  {{- end -}}
+  {{- range $key, $value := .Values.mongodb.hosts -}}
+    {{- if eq $key 0 -}}
+      {{- printf "%s:%v" $value.host $value.port -}}
+    {{- else -}}
+      {{- printf ",%s:%v" $value.host $value.port -}}
+    {{- end -}}
+  {{- end -}}
+  {{- printf "/" -}}
+  {{- if .Values.mongodb.dbname -}}
+    {{- printf "%s" .Values.mongodb.dbname -}}
+  {{- end -}}
+  {{- if .Values.mongodb.options -}}
+    {{- printf "?" }}
+    {{- range $key, $value := .Values.mongodb.options -}}
+      {{- if eq $key 0 -}}
+        {{- printf "%s" $value -}}
+      {{- else -}}
+        {{- printf "&%s" $value -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end }}
