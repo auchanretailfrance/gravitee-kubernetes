@@ -4,24 +4,6 @@
 chaos:
   enabled: false
 
-oauth:
-  enabled: false
-  localLoginDisabled: true
-  # OAuth2 token validation endpoint url
-  tokenEndpoint: https://auth/realms/default/protocol/openid-connect/token
-  # Authorization endpoint to ask for an authorization_code
-  authorizationEndpoint: https://auth/realms/default/protocol/openid-connect/auth
-  userInfoEndpoint: https://auth/realms/default/protocol/openid-connect/userinfo
-  userLogoutEndpoint: https://uth/realms/default/protocol/openid-connect/logout
-  # OAuth2 resource server client id
-  clientId: client
-  # OAut2 resource server client secret
-  clientSecret: secret
-  # Required scope
-  scope:
-    - profile
-    - openid
-
 inMemoryAuth:
   enabled: true
 
@@ -116,8 +98,21 @@ api:
       memory: 512Mi
   config: {}
     ## See https://docs.gravitee.io/apim_installguide_management_api_configuration.html#environment_variables
-    # gravitee_email_enabled: true
-    # gravitee_email_host: smtp.my.domain
+    ## ex - setting keycloack authentication :
+    # security_providers_0_type: oauth2
+    # security_providers_0_clientId: gravitee
+    # security_providers_0_clientSecret: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    # security_providers_0_tokenEndpoint: http://localhost:8080/auth/realms/master/protocol/openid-connect/token
+    # security_providers_0_tokenIntrospectionEndpoint: http://localhost:8080/auth/realms/master/protocol/openid-connect/token/introspect
+    # security_providers_0_userInfoEndpoint: http://localhost:8080/auth/realms/master/protocol/openid-connect/userinfo
+    # security_providers_0_accessTokenProperty: access_token
+    # security_providers_0_authorizationHeader: "Bearer %s"
+    # security_providers_0_mapping_id: sub
+    # security_providers_0_mapping_email: email
+    # security_providers_0_mapping_lastname: family_name
+    # security_providers_0_mapping_firstname: given_name
+
+
 
 
 gateway:
