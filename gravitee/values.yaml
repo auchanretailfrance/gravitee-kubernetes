@@ -26,7 +26,7 @@ inMemoryAuth:
   enabled: true
 
 mongodb:
-  ## Configuring gravitee_management_mongodb_uri environment variable for api and gateway
+  ## Configuring gravitee_management_mongodb_uri environment variable for both api and gateway
   hosts:
     - host: mongo1
       port: 27017
@@ -44,12 +44,18 @@ mongodb:
     # - socketTimeout=250
 
 elasticsearch:
-  ## Configuring elasticsearch environment variables for api and gateway :
+  ## Configuring elasticsearch environment variables for api :
   ##    gravitee_analytics_elasticsearch_endpoints_x
   ##    gravitee_analytics_elasticsearch_index
   ##    gravitee_analytics_elasticsearch_cluster
   ##    gravitee_analytics_elasticsearch_username
   ##    gravitee_analytics_elasticsearch_password
+  ## and for gateway :
+  ##    gravitee_reporters_elasticsearch_endpoints_x
+  ##    gravitee_reporters_elasticsearch_index
+  ##    gravitee_reporters_elasticsearch_cluster
+  ##    gravitee_reporters_elasticsearch_username
+  ##    gravitee_reporters_elasticsearch_password
   endpoints:
     - host: es1
       port: 9200
@@ -57,18 +63,14 @@ elasticsearch:
     #   port: 9200
     # - host: es3
     #   port: 9200
-  cluster: elasticsearch
-  index: gravitee
+  # cluster: elasticsearch
+  # index: gravitee
   # username: elasticsearch
   # password: elasticsearch
 
 api:
   name: api
   debugEnabled: false
-  config: {}
-    ## See https://docs.gravitee.io/apim_installguide_management_api_configuration.html#environment_variables
-    # gravitee_analytics_security_username: admin
-    # gravitee_analytics_security_password: admin
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -112,6 +114,10 @@ api:
     requests:
       cpu: 200m
       memory: 512Mi
+  config: {}
+    ## See https://docs.gravitee.io/apim_installguide_management_api_configuration.html#environment_variables
+    # gravitee_email_enabled: true
+    # gravitee_email_host: smtp.my.domain
 
 
 gateway:
@@ -156,6 +162,11 @@ gateway:
     requests:
       cpu: 200m
       memory: 256Mi
+  config: {}
+    ## See https://docs.gravitee.io/apim_installguide_management_api_configuration.html#environment_variables
+    # gravitee_services_apikeycache_delay: 50000
+    # gravitee_services_apikeycache_threads: 5
+    # gravitee_services_apikeycache_unit: MILLISECONDS
 
 ui:
   name: ui
