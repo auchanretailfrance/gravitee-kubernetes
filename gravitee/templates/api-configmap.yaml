@@ -9,35 +9,19 @@ metadata:
     release: {{ .Release.Name }}
   name: {{ template "gravitee.api.fullname" . }}
 data:
-  {{- /* MONGODB REPLICASET TYPE */}}
-  {{- if eq .Values.mongodb.type "replicaset" }}
-  gravitee_management_mongodb_uri: mongodb://{{- if .Values.mongodb.username -}}{{ .Values.mongodb.username }}{{- if .Values.mongodb.password -}}:{{ .Values.mongodb.password }}{{- end -}}@{{- end -}}{{- range $key, $value := .Values.mongodb.hosts -}}{{- if eq $key 0 -}}{{ $value.host }}:{{ $value.port }}{{- else -}},{{ $value.host }}:{{ $value.port }}{{- end -}}{{- end -}}/{{ .Values.mongodb.dbname }}?replicaSet={{ .Values.mongodb.replicaSet }}{{- if .Values.mongodb.options -}}{{- range $key, $value := .Values.mongodb.options -}}&{{ $key }}={{ $value }}{{- end -}}{{- end }}
-  {{- else }}
-    {{- /* MONGODB STANDALONE TYPE */}}
-    {{- if eq .Values.mongodb.type "standalone" }}
-  gravitee_management_mongodb_host: {{ (index .Values.mongodb.hosts 0).host }}
-  gravitee_management_mongodb_port: {{ (index .Values.mongodb.hosts 0).port | default 27017 }}
-    {{- end }}
-    {{- /* MONGODB CLUSTER TYPE */}}
-    {{- if eq .Values.mongodb.type "cluster" }}
-      {{- range $key, $value := .Values.mongodb.hosts }}
-  gravitee_management_mongodb_servers_{{ $key }}_host: {{ $value.host }}
-  gravitee_management_mongodb_servers_{{ $key }}_port: {{ $value.port | default 27017 }}
-      {{- end }}
-    {{- end }}
-    {{- /* MONGODB STANDALONE & CLUSTER TYPE OPTIONS */}}
-    {{- if .Values.mongodb.username }}
-  gravitee_management_mongodb_username: {{ .Values.mongodb.username }}
-    {{- end }}
-    {{- if .Values.mongodb.password }}
-  gravitee_management_mongodb_password: {{ .Values.mongodb.password }}
-    {{- end }}
-    {{- if .Values.mongodb.dbname }}
-  gravitee_management_mongodb_dbname: {{ .Values.mongodb.dbname }}
-    {{- end }}
-    {{- range $key, $value := .Values.mongodb.options }}
-  gravitee_management_mongodb_{{ $key }}: {{ $value }}
-    {{- end }}
+  gravitee_management_type: mongodb
+  gravitee_management_mongodb_uri: {{ template "mongodb_uri" . }}
+  gravitee_analytics_type: elasticsearch
+  {{- range $key, $value := .Values.elasticsearch.endpoints }}
+  gravitee_analytics_elasticsearch_endpoints_{{ $key }}: http://{{ $value.host }}:{{ $value.port }}
+  {{- end }}
+  gravitee_analytics_elasticsearch_index: {{ .Values.elasticsearch.index }}
+  gravitee_analytics_elasticsearch_cluster: {{ .Values.elasticsearch.cluster }}
+  {{- if .Values.elasticsearch.username }}
+  gravitee_analytics_security_username: {{ .Values.elasticsearch.username }}
+  {{- if .Values.elasticsearch.password }}
+  gravitee_analytics_security_password: {{ .Values.elasticsearch.password }}
+  {{- end }}
   {{- end }}
 {{- with .Values.api.config }}
 {{ toYaml . | indent 2 }}
