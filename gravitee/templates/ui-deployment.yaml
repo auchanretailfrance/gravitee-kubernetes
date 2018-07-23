@@ -32,6 +32,9 @@ spec:
               value: "https://{{index .Values.api.ingress.hosts 0 }}/management/"
           ports:
             - containerPort: {{ .Values.ui.service.internalPort }}
+          envFrom:
+          - configMapRef:
+            name: {{ template "gravitee.ui.fullname" . }}
           livenessProbe:
             httpGet:
               path: /
@@ -50,13 +53,5 @@ spec:
       nodeSelector:
 {{ toYaml .Values.ui.nodeSelector | indent 8 }}
     {{- end }}
-          volumeMounts:
-            - name: config
-              mountPath: /var/www/html/constants.json
-              subPath: constants.json
       imagePullSecrets:
         - name: {{ .Values.ui.image.pullSecrets }}
-      volumes:
-        - name: config
-          configMap:
-            name: {{ template "gravitee.ui.fullname" . }}
