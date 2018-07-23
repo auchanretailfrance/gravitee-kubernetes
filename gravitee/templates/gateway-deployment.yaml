@@ -36,6 +36,9 @@ spec:
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.gateway.service.internalPort }}
+          envFrom:
+          - configMapRef:
+            name: {{ template "gravitee.gateway.fullname" . }}          
           livenessProbe:
             tcpSocket:
               port: {{ .Values.gateway.service.internalPort }}
@@ -52,13 +55,5 @@ spec:
       nodeSelector:
 {{ toYaml .Values.gateway.nodeSelector | indent 8 }}
     {{- end }}
-          volumeMounts:
-            - name: config
-              mountPath: /opt/graviteeio-gateway/config/gravitee.yml
-              subPath: gravitee.yml
       imagePullSecrets:
         - name: {{ .Values.gateway.image.pullSecrets }}
-      volumes:
-        - name: config
-          configMap:
-            name: {{ template "gravitee.gateway.fullname" . }}
